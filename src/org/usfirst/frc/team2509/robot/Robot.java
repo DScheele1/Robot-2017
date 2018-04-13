@@ -9,6 +9,8 @@ package org.usfirst.frc.team2509.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
@@ -17,7 +19,7 @@ import edu.wpi.first.wpilibj.drive.MecanumDrive;
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
  * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.properties file in the
+ * creating this project, you65 must also update the build.properties file in the
  * project.
  */
 public class Robot extends IterativeRobot {
@@ -29,7 +31,7 @@ public class Robot extends IterativeRobot {
 	public static WPI_TalonSRX Rightback;
 	public static WPI_TalonSRX Sweeper;
 	public static MecanumDrive RobotDrive;
-
+	public static UsbCamera CAM;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -44,6 +46,12 @@ public class Robot extends IterativeRobot {
 		Leftfront = new WPI_TalonSRX(2);
 		Sweeper = new WPI_TalonSRX(5);
 		RobotDrive = new MecanumDrive(Leftfront, Leftback, Rightfront, Rightback);
+		
+		CAM = CameraServer.getInstance().startAutomaticCapture();
+        CAM.setBrightness(0);
+        CAM.setResolution(160, 120);
+        CAM.setFPS(30);
+//      SmartDashboard.put
 	}
 
 	/**
@@ -78,9 +86,14 @@ public class Robot extends IterativeRobot {
 		Leftfront.setInverted(true);
 		Rightback.setInverted(true);
 		Rightfront.setInverted(true);
-		RobotDrive.driveCartesian(OPSTICK.getX()*1,OPSTICK.getY()*1,OPSTICK.getZ()*1);
+		RobotDrive.driveCartesian(OPSTICK.getX()*-1,OPSTICK.getY()*1,OPSTICK.getZ()*0.7);
 		if(COOPSTICK.getRawButton(1)) {
 			Sweeper.set(0.5);
+		}else {
+			Sweeper.set(0);
+		}
+		if(COOPSTICK.getRawButton(2)) {
+			Sweeper.set(-0.5);
 		}else {
 			Sweeper.set(0);
 		}
